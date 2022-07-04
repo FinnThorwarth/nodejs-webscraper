@@ -8,8 +8,7 @@ app.use(cors())
 
 const url = 'https://www.wg-werbeagentur.de'
 
-// get the urls from a config file
-const urls = require('./urls.json')
+
 
 
 app.get('/', function (req, res) {
