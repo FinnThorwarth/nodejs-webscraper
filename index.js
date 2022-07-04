@@ -29,7 +29,25 @@ var connection = mysql.createConnection({
   database: config.database.database
 });
 
-connection.connect();
+// safe to database
+function safeToDatabase(data) {
+  connection.connect();
+  // check if data is already in database
+  connection.query('SELECT * FROM Projekte WHERE Name = ' + mysql.escape(data.name), function (err, result) {
+    if (err) throw err;
+    if (result.length === 0) {
+      // insert data into database with mysql
+      connection.query('INSERT INTO Projekte (Name,URL) VALUES (' + mysql.escape(data.name) + ',' + mysql.escape(data.url) + ')', function (err, result) {
+        if (err) throw err;
+        console.log('1 record inserted');
+      });
+    } else {
+      console.log('data already in database')
+    }
+  });
+  // close connection
+  connection.end();
+}
 
 //import urls from './urls.json'
 const urls = require('./src/urls.json')
@@ -55,24 +73,6 @@ function getArticles() {
 
       }).catch(err => console.log(err))
   })
-}
-
-// safe to database
-function safeToDatabase(data) {
-  console.log(data.name);
-  // check if data is already in database
-  connection.query('SELECT * FROM Projekte WHERE Name = ' + mysql.escape(data.name), function (err, result) {
-    if (err) throw err;
-    if (result.length === 0) {
-      // insert data into database with mysql
-      connection.query('INSERT INTO Projekte (Name,URL) VALUES ('+ mysql.escape(data.name)+','+mysql.escape(data.url)+')' , function (err, result) {
-        if (err) throw err;
-        console.log('1 record inserted');
-      });
-    } else {
-      console.log('data already in database')
-    }
-  });
 }
 
 // run function every 6 hours
