@@ -122,7 +122,7 @@ function getWEIncludes() {
 // run function every 6 hours
 setInterval(() => {
   getArticles()
-}, 3600000)
+}, 1000 * 60 * 60 * 24)
 
 
 
