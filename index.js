@@ -132,7 +132,7 @@ function getWEIncludes() {
 // run function every 24 hours
 setInterval(() => {
   getWEData()
-}, 1000 * 60 * 3 * 1) //ms * s * m * h
+}, 1000 * 60 * 60 * 12) //ms * s * m * h
 
 
 
