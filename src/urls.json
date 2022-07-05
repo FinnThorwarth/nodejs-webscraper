@@ -1,10 +1,28 @@
 [
   {
     "name": "WG Werbeagentur",
-    "url": "https://www.wg-werbeagentur.de/"
+    "url": "https://www.wg-werbeagentur.de/",
+    "urlAPI": "https://www.wg-werbeagentur.de/_extras/api/versions.php"
   },
   {
     "name": "Blaumeier",
-    "url": "https://www.blaumeier.de/"
+    "url": "https://www.blaumeier.de/",
+    "urlAPI": "https://www.blaumeier.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Apfelfuchs",
+    "url": "https://www.apfelfuchs.de/",
+    "urlAPI": "https://entwicklung.apfelfuchs-bremen.de/_extras/api/versions.php"
+  },
+  {
+    "name": ":prime",
+    "url": "https://www.primebremen.de/",
+    "urlAPI": "https://www.primebremen.de/_extras/api/versions.php"
+  },
+  {
+    "name": "here ahead",
+    "url": "https://www.aheadbremen.de",
+    "urlAPI": "https://www.aheadbremen.de/_extras/api/versions.php"
   }
 ]
+
