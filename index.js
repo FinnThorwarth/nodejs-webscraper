@@ -50,7 +50,7 @@ function safeToDatabase(data) {
     if (err) throw err;
     if (result.length === 0) {
       // insert data into database with mysql
-      connection.query('INSERT INTO Projekte (Name,URL) VALUES (' + mysql.escape(data.name) + ',' + mysql.escape(data.url) + ')', function (err, result) {
+      connection.query('INSERT INTO Projekte (Name,URL,URLAPI) VALUES (' + mysql.escape(data.name) + ',' + mysql.escape(data.url) + ',' + mysql.escape(data.urlAPI) + ')', function (err, result) {
         if (err) throw err;
         console.log('Eintrag erstellt');
       });
@@ -58,6 +58,13 @@ function safeToDatabase(data) {
       console.log('Eintrag vorhanden')
       // get id from the result object
       var id = result[0].ID;
+
+      //update data where id is equal to id
+      connection.query('UPDATE Projekte SET Name = ' + mysql.escape(data.name) + ', URL = ' + mysql.escape(data.url) + ', URLAPI = ' + mysql.escape(data.urlAPI) + ' WHERE ID = ' + mysql.escape(id), function (err, result) {
+        if (err) throw err;
+        console.log('Haupteintrag aktualisiert');
+      });
+
 
       // write versions to database
       connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
