@@ -86,6 +86,8 @@ function getWEData() {
       .then(response => {
         const json = response.data
 
+        console.log('data: ' + json)
+
         // get status code
         const statusCode = response.status
 
