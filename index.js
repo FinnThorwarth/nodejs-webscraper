@@ -127,10 +127,10 @@ function getWEIncludes() {
 }
 
 
-// run function every 6 hours
+// run function every 24 hours
 setInterval(() => {
-  getArticles()
-}, 1000 * 60 * 60 * 24)
+  getWEData()
+}, 1000 * 3 * 1 * 1)
 
 
 
