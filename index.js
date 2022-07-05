@@ -5,6 +5,7 @@ const express = require('express')
 var mysql = require('mysql');
 const app = express()
 const cors = require('cors')
+var _ = require('lodash');
 app.use(cors())
 
 
@@ -20,27 +21,11 @@ app.get('/results', (req, res) => {
 //import config from './src/config.json'
 const config = require('./src/config.json')
 
-var connection = mysql.createConnection({
+var connection = mysql.createPool({
   host: config.database.host,
   user: config.database.user,
   password: config.database.password,
   database: config.database.database
-});
-
-
-//handle disconnects
-connection.on('error', function (err) {
-  console.log('db error', err)
-  if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-    connection = mysql.createConnection({
-      host: config.database.host,
-      user: config.database.user,
-      password: config.database.password,
-      database: config.database.database
-    });
-  } else {
-    throw err;
-  }
 });
 
 // safe to database
@@ -65,12 +50,28 @@ function safeToDatabase(data) {
         console.log('Haupteintrag aktualisiert');
       });
 
-
-      // write versions to database
-      connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
+      // insert results into database only if the last insert by id is different from the current insert
+      connection.query('SELECT * FROM Resultate WHERE Projekt_ID = ' + id + ' ORDER BY Result_ID DESC LIMIT 1', function (err, result) {
         if (err) throw err;
-        console.log('Eintrag geschrieben');
-      });
+        if (result.length === 0) {
+          // insert data into database with mysql
+          connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
+            if (err) throw err;
+            console.log('Versionseintrag erstellt');
+          });
+        } else if (_.isEqual(result[0].Result,JSON.stringify(data.versions))) {
+          // get difference between json objects
+          console.log(id + ': ' + result[0].Result);
+          console.log(id + ': ' + JSON.stringify(data.versions));
+          connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
+            if (err) throw err;
+            console.log('Versionseintrag geschrieben');
+          });
+        } else {
+          console.log('Versionseintrag vorhanden')
+        }
+      }
+      );
 
     }
   });
