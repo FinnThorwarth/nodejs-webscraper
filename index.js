@@ -59,10 +59,7 @@ function safeToDatabase(data) {
             if (err) throw err;
             console.log('Versionseintrag erstellt');
           });
-        } else if (_.isEqual(result[0].Result,JSON.stringify(data.versions))) {
-          // get difference between json objects
-          console.log(id + ': ' + result[0].Result);
-          console.log(id + ': ' + JSON.stringify(data.versions));
+        } else if (_.isEqual(result[0].Result, JSON.stringify(data.versions))) {
           connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
             if (err) throw err;
             console.log('Versionseintrag geschrieben');
@@ -88,16 +85,21 @@ function getWEData() {
     axios(urlData.urlAPI)
       .then(response => {
         const json = response.data
-        const data = {}
+
+        // get status code
+        const statusCode = response.status
 
         // Daten definieren
+        const data = {}
         data.name = urlData.name
         data.url = urlData.url
         data.urlAPI = urlData.urlAPI
         data.versions = json
 
         // safe to database
-        safeToDatabase(data);
+        if (statusCode === 200) {
+          safeToDatabase(data);
+        }
 
       }).catch(err => console.log(err))
   })
@@ -130,7 +132,7 @@ function getWEIncludes() {
 // run function every 24 hours
 setInterval(() => {
   getWEData()
-}, 1000 * 3 * 1 * 1)
+}, 1000 * 60 * 3 * 1) //ms * s * m * h
 
 
 

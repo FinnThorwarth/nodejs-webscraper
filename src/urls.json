@@ -23,6 +23,11 @@
     "name": "here ahead",
     "url": "https://www.aheadbremen.de",
     "urlAPI": "https://www.aheadbremen.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Marinetech",
+    "url": "https://www.marinetech.de",
+    "urlAPI": "https://www.marinetech.de/_extras/api/versions.php"
   }
 ]
 
