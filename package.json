@@ -16,8 +16,12 @@
     "lodash": "^4.17.21",
     "lodash.chunk": "^4.2.0",
     "mysql": "^2.18.1",
+<<<<<<< HEAD
     "nodemon": "^2.0.19",
     "puppeteer": "^15.3.0",
     "wappalyzer": "^6.10.37"
+=======
+    "nodemon": "^2.0.19"
+>>>>>>> 1acca8d544518df4f0be4bebe032c5deec7811ca
   }
 }
