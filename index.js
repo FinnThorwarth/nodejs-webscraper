@@ -35,9 +35,9 @@ var connection = mysql.createPool({
 });
 
 // safe to database
-function safeToDatabase(data) {
+function safeBasicInformationsToDatabase(data) {
   // check if data is already in database
-  connection.query('SELECT * FROM Projekte WHERE Name = ' + mysql.escape(data.name), function (err, result) {
+  connection.query('SELECT * FROM Projekte WHERE URL = ' + mysql.escape(data.url), function (err, result) {
     if (err) throw err;
     if (result.length === 0) {
       // insert data into database with mysql
@@ -83,16 +83,41 @@ function safeToDatabase(data) {
   });
 }
 
+function safeTechnicalVersionsToDatabase(data, url) {
+  // check if data is already in database
+  connection.query('SELECT * FROM Projekte WHERE URL = ' + mysql.escape(url), function (err, result) {
+    if (err) throw err;
+    if (result.length > 0) {
+      // get id from the result object
+      var id = result[0].ID;
+
+      // get the newest result from the database with the id
+      connection.query('SELECT * FROM Resultate WHERE Projekt_ID = ' + id + ' ORDER BY Result_ID DESC LIMIT 1', function (err, result) {
+        if (err) throw err;
+        if (result.length > 0) {
+          // get the id out of request
+          var id = result[0].Result_ID;
+
+          // update data in database where id is equal id
+          connection.query('UPDATE Resultate SET Technologies = ' + mysql.escape(JSON.stringify(data.technologies[0])) + ', URLS = ' + mysql.escape(JSON.stringify(data.urls)) + ' WHERE Result_ID = ' + id, function (err, result) {
+            if (err) throw err;
+            console.log('Technologieeintrag aktualisiert');
+          });
+        }
+      });
+    }
+  });
+}
+
 function getLibarys(url) {
   const Wappalyzer = require('wappalyzer');
 
- 
   const options = {
     debug: false,
     delay: 500,
     headers: {},
     maxDepth: 3,
-    maxUrls: 10,
+    maxUrls: 30,
     maxWait: 5000,
     recursive: true,
     probe: true,
@@ -103,31 +128,35 @@ function getLibarys(url) {
     noScripts: false,
     noRedirect: false,
   };
-  
+
   const wappalyzer = new Wappalyzer(options)
-  
-  ;(async function() {
-    try {
-      await wappalyzer.init()
-  
-      // Optionally set additional request headers
-      const headers = {}
-  
-      const site = await wappalyzer.open(url, headers)
-  
-      // Optionally capture and output errors
-      site.on('error', console.error)
-  
-      const results = await site.analyze()
-  
-      console.log(JSON.stringify(results, null, 2))
-    } catch (error) {
-      console.error(error)
-    }
-  
-    await wappalyzer.destroy()
-  })()
-} 
+
+    ; (async function () {
+      try {
+        await wappalyzer.init()
+
+        // Optionally set additional request headers
+        const headers = {}
+
+        const site = await wappalyzer.open(url, headers)
+
+        // Optionally capture and output errors
+        site.on('error', console.error)
+
+        const results = await site.analyze()
+
+        //console.log(JSON.stringify(results, null, 2))
+
+        // write results to database
+        safeTechnicalVersionsToDatabase(results,url);
+
+      } catch (error) {
+        console.error(error)
+      }
+
+      await wappalyzer.destroy()
+    })()
+}
 
 // running function for every entry in urls
 // define function 
@@ -151,7 +180,7 @@ function getWEData() {
 
         // safe to database
         if (statusCode === 200) {
-          safeToDatabase(data);
+          safeBasicInformationsToDatabase(data);
         }
 
       }).catch(err => console.log(err))
@@ -178,7 +207,7 @@ function getWEIncludes() {
         console.log(data)
         console.log(urlData.name)
         // safe to database
-        safeToDatabase(data);
+        safeBasicInformationsToDatabase(data);
 
       }).catch(err => console.log(err))
   })
