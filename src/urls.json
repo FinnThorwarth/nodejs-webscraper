@@ -133,5 +133,10 @@
     "name": "Landesfrauenrat Bremen",
     "url": "https://www.landesfrauenrat-bremen.de",
     "urlAPI": "https://www.landesfrauenrat-bremen.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Familienzentrum Osterholz-Scharmbeck e.V.",
+    "url": "https://www.mgh-ohz.de",
+    "urlAPI": "https://www.mgh-ohz.de/_extras/api/versions.php"
   }
 ]
