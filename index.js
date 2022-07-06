@@ -84,41 +84,48 @@ function safeToDatabase(data) {
 }
 
 function getLibarys(url) {
-  // use wappalyser for analyse website with puppeteer as browser
-  (async () => {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.goto(url);
+  const Wappalyzer = require('wappalyzer');
 
-    // get source code with puppeteer
-    const html = await page.content();
-    //console.log('html: ' + html);
-    // analyze website html with wappalyzer
-
-    const wappalyzer = new Wappalyzer();
-
-    (async function () {
-      try {
-        await wappalyzer.init()
-
-        // Optionally set additional request headers
-        const headers = {}
-
-        const site = await wappalyzer.open(page, headers)
-
-        // Optionally capture and output errors
-        site.on('error', console.error)
-
-        const results = await site.analyze()
-
-        console.log(JSON.stringify(results, null, 2))
-      } catch (error) {
-        console.error(error)
-      }
-
-      await wappalyzer.destroy()
-    })()
-    await browser.close()
+ 
+  const options = {
+    debug: false,
+    delay: 500,
+    headers: {},
+    maxDepth: 3,
+    maxUrls: 10,
+    maxWait: 5000,
+    recursive: true,
+    probe: true,
+    proxy: false,
+    userAgent: 'Wappalyzer',
+    htmlMaxCols: 2000,
+    htmlMaxRows: 2000,
+    noScripts: false,
+    noRedirect: false,
+  };
+  
+  const wappalyzer = new Wappalyzer(options)
+  
+  ;(async function() {
+    try {
+      await wappalyzer.init()
+  
+      // Optionally set additional request headers
+      const headers = {}
+  
+      const site = await wappalyzer.open(url, headers)
+  
+      // Optionally capture and output errors
+      site.on('error', console.error)
+  
+      const results = await site.analyze()
+  
+      console.log(JSON.stringify(results, null, 2))
+    } catch (error) {
+      console.error(error)
+    }
+  
+    await wappalyzer.destroy()
   })()
 } 
 
