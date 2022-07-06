@@ -93,5 +93,45 @@
     "name": "Schaulust",
     "url": "https://www.bremen-schaulust.de",
     "urlAPI": "https://www.bremen-schaulust.de/_extras/api/versions.php"
+  },
+  {
+    "name": "DATALOG",
+    "url": "https://www.datalog-bremen.de",
+    "urlAPI": "https://www.datalog-bremen.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Matthias Westerholt",
+    "url": "https://www.die-rechtsanwaelte.com",
+    "urlAPI": "https://www.die-rechtsanwaelte.com/_extras/api/versions.php"
+  },
+  {
+    "name": "Ensemble La Ninfea",
+    "url": "https://www.ensemble-laninfea.de",
+    "urlAPI": "https://www.ensemble-laninfea.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Fachärzte für Frauenheilkunde und Geburtshilfe",
+    "url": "https://www.frauenaerzte-bremen.de",
+    "urlAPI": "https://www.frauenaerzte-bremen.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Hof Kaemena",
+    "url": "https://www.hof-kaemena.de",
+    "urlAPI": "https://www.hof-kaemena.de/_extras_/api/versions.php"
+  },
+  {
+    "name": "Knäcke",
+    "url": "https://www.knaecke.com",
+    "urlAPI": "https://www.knaecke.com/_extras/api/versions.php"
+  },
+  {
+    "name": "Komponisten-Quartier",
+    "url": "https://www.komponistenquartier.de",
+    "urlAPI": "https://www.komponistenquartier.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Landesfrauenrat Bremen",
+    "url": "https://www.landesfrauenrat-bremen.de",
+    "urlAPI": "https://www.landesfrauenrat-bremen.de/_extras/api/versions.php"
   }
 ]
