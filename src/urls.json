@@ -33,6 +33,65 @@
     "name": "Ahlrich Siemens",
     "url": "https://www.ahlrich-siemens.com",
     "urlAPI": "https://www.ahlrich-siemens.com/_extras/api/versions.php"
+  },
+  {
+    "name": "Borrmann Coaching",
+    "url": "https://www.borrmann-coaching.de",
+    "urlAPI": "https://www.borrmann-coaching.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Franzen Legal",
+    "url": "https://www.franzen-legal.de",
+    "urlAPI": "https://www.franzen-legal.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Gartenräume Gestalten",
+    "url": "http://www.gartenraeume-gestalten.de",
+    "urlAPI": "http:/www.gartenraeume-gestalten.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Immobilien Fleischhauer",
+    "url": "https://www.immobilien-fleischhauer.de",
+    "urlAPI": "https://www.immobilien-fleischhauer.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Jens Stemminger",
+    "url": "https://www.js-bits.com",
+    "urlAPI": "https://www.js-bits.com/_extras/api/versions.php"
+  },
+  {
+    "name": "InnoWi",
+    "url": "https://www.innowi.de",
+    "urlAPI": "https://www.innowi.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Babette",
+    "url": "https://www.babette-komik.de",
+    "urlAPI": "https://www.babette-komik.de/_extras/api/versions.php"
+  },
+  {
+    "name": "nesemann & grambeck",
+    "url": "https://newsletter.umsatz-steuer-beratung.de",
+    "urlAPI": "https://newsletter.umsatz-steuer-beratung.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Nicole Erichsen",
+    "url": "https://www.nicoleerichsen.de",
+    "urlAPI": "https://www.nicoleerichsen.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Arbeitgeberverband AWO",
+    "url": "https://www.agv-awo.de",
+    "urlAPI": "https://www.agv-awo.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Barbara Heindlmeier",
+    "url": "https://www.barbaraheindlmeier.de",
+    "urlAPI": "https://www.barbaraheindlmeier.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Schaulust",
+    "url": "https://www.bremen-schaulust.de",
+    "urlAPI": "https://www.bremen-schaulust.de/_extras/api/versions.php"
   }
 ]
-
