@@ -83,7 +83,6 @@ function safeToDatabase(data) {
   });
 }
 
-
 function getLibarys(url) {
   // use wappalyser for analyse website with puppeteer as browser
   (async () => {
@@ -96,25 +95,32 @@ function getLibarys(url) {
     //console.log('html: ' + html);
     // analyze website html with wappalyzer
 
-    const wappalyzer = new Wappalyzer()
-    await wappalyzer.init()
+    const wappalyzer = new Wappalyzer();
 
-    const site = await wappalyzer(html);
-    const apps = site.analyze();
-    console.log(apps);
-    await browser.close();
-    return apps;
-  }
-  )().then(apps => {
-    console.log(apps)
-  }
-  ).catch(err => {
-    console.log(err)
-  }
-  )
+    (async function () {
+      try {
+        await wappalyzer.init()
 
-}
+        // Optionally set additional request headers
+        const headers = {}
 
+        const site = await wappalyzer.open(page, headers)
+
+        // Optionally capture and output errors
+        site.on('error', console.error)
+
+        const results = await site.analyze()
+
+        console.log(JSON.stringify(results, null, 2))
+      } catch (error) {
+        console.error(error)
+      }
+
+      await wappalyzer.destroy()
+    })()
+    await browser.close()
+  })()
+} 
 
 // running function for every entry in urls
 // define function 
