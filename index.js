@@ -3,11 +3,19 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const express = require('express')
 var mysql = require('mysql');
-const app = express()
 const cors = require('cors')
-var _ = require('lodash');
+var _ = require('lodash'); // Lib for comparing two arrays
+const Wappalyzer = require('wappalyzer'); // Lib for analyzeing websites
+const puppeteer = require('puppeteer'); // Lib for simulating a browser
+const app = express()
 app.use(cors())
 
+
+//import urls from './urls.json'
+const urls = require('./src/urls.json')
+
+//import config from './src/config.json'
+const config = require('./src/config.json')
 
 app.get('/', function (req, res) {
   res.json('WG Webscraper')
@@ -18,9 +26,7 @@ app.get('/results', (req, res) => {
   res.json('WG Webscraper')
 })
 
-//import config from './src/config.json'
-const config = require('./src/config.json')
-
+// Database Connection
 var connection = mysql.createPool({
   host: config.database.host,
   user: config.database.user,
@@ -40,7 +46,7 @@ function safeToDatabase(data) {
         console.log('Eintrag erstellt');
       });
     } else {
-      console.log('Eintrag vorhanden')
+      // console.log('Eintrag vorhanden')
       // get id from the result object
       var id = result[0].ID;
 
@@ -50,33 +56,55 @@ function safeToDatabase(data) {
         console.log('Haupteintrag aktualisiert');
       });
 
-      // insert results into database only if the last insert by id is different from the current insert
-      connection.query('SELECT * FROM Resultate WHERE Projekt_ID = ' + id + ' ORDER BY Result_ID DESC LIMIT 1', function (err, result) {
-        if (err) throw err;
-        if (result.length === 0) {
-          // insert data into database with mysql
-          connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
-            if (err) throw err;
-            console.log('Versionseintrag erstellt');
-          });
-        } else if (_.isEqual(result[0].Result, JSON.stringify(data.versions))) {
-          connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
-            if (err) throw err;
-            console.log('Versionseintrag geschrieben');
-          });
-        } else {
-          console.log('Versionseintrag vorhanden')
-        }
+      // if data versions is not empty
+      if (data.versions.length > 0) {
+        // insert results into database only if the last insert by id is different from the current insert
+        connection.query('SELECT * FROM Resultate WHERE Projekt_ID = ' + id + ' ORDER BY Result_ID DESC LIMIT 1', function (err, result) {
+          if (err) throw err;
+          if (result.length === 0) {
+            // insert data into database with mysql
+            connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
+              if (err) throw err;
+              console.log('Versionseintrag erstellt');
+            });
+          } else if (_.isEqual(result[0].Result, JSON.stringify(data.versions))) {
+            console.log('Versionseintrag vorhanden')
+          } else {
+            connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
+              if (err) throw err;
+              console.log('Versionseintrag geschrieben');
+            });
+          }
+        });
+      } else {
+        console.log('Keine Versionen vorhanden')
       }
-      );
-
     }
   });
-  // close connection
 }
 
-//import urls from './urls.json'
-const urls = require('./src/urls.json')
+
+function getLibarys(url) {
+  // use wappalyser for analyse website with puppeteer as browser
+  (async () => {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto(url);
+    const wappalyzer = new Wappalyzer(browser);
+    const libarys = await wappalyzer.analyze();
+    await browser.close();
+    return libarys;
+  }
+  )().then(libarys => {
+    console.log(libarys)
+  }
+  ).catch(err => {
+    console.log(err)
+  }
+  )
+
+}
+
 
 // running function for every entry in urls
 // define function 
@@ -85,6 +113,8 @@ function getWEData() {
     axios(urlData.urlAPI)
       .then(response => {
         const json = response.data
+
+        console.log('data: ' + json)
 
         // get status code
         const statusCode = response.status
@@ -102,6 +132,9 @@ function getWEData() {
         }
 
       }).catch(err => console.log(err))
+
+    // getLibarys
+    getLibarys(urlData.url);
   })
 }
 
@@ -132,7 +165,7 @@ function getWEIncludes() {
 // run function every 24 hours
 setInterval(() => {
   getWEData()
-}, 1000 * 60 * 3 * 1) //ms * s * m * h
+}, 1000 * 60 * 60 * 12) //ms * s * m * h
 
 
 

@@ -1,2 +1,4 @@
 # ignore configuration file
 /src/config.json
+# ignore node_modules
+/node_modules

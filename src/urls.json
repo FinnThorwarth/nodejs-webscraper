@@ -9,11 +9,7 @@
     "url": "https://www.blaumeier.de/",
     "urlAPI": "https://www.blaumeier.de/_extras/api/versions.php"
   },
-  {
-    "name": "Apfelfuchs",
-    "url": "https://www.apfelfuchs.de/",
-    "urlAPI": "https://entwicklung.apfelfuchs-bremen.de/_extras/api/versions.php"
-  },
+
   {
     "name": ":prime",
     "url": "https://www.primebremen.de/",
