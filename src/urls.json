@@ -9,7 +9,6 @@
     "url": "https://www.blaumeier.de/",
     "urlAPI": "https://www.blaumeier.de/_extras/api/versions.php"
   },
-
   {
     "name": ":prime",
     "url": "https://www.primebremen.de/",
@@ -24,6 +23,16 @@
     "name": "Marinetech",
     "url": "https://www.marinetech.de",
     "urlAPI": "https://www.marinetech.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Werner Holding",
+    "url": "https://www.werner-holding.de",
+    "urlAPI": "https://www.werner-holding.de/_extras_/api/versions.php"
+  },
+  {
+    "name": "Ahlrich Siemens",
+    "url": "https://www.ahlrich-siemens.com",
+    "urlAPI": "https://www.ahlrich-siemens.com/_extras/api/versions.php"
   }
 ]
 

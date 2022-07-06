@@ -15,7 +15,8 @@ app.use(cors())
 const urls = require('./src/urls.json')
 
 //import config from './src/config.json'
-const config = require('./src/config.json')
+const config = require('./src/config.json');
+const console = require('console');
 
 app.get('/', function (req, res) {
   res.json('WG Webscraper')
@@ -56,29 +57,25 @@ function safeBasicInformationsToDatabase(data) {
         console.log('Haupteintrag aktualisiert');
       });
 
-      // if data versions is not empty
-      if (data.versions.length > 0) {
-        // insert results into database only if the last insert by id is different from the current insert
-        connection.query('SELECT * FROM Resultate WHERE Projekt_ID = ' + id + ' ORDER BY Result_ID DESC LIMIT 1', function (err, result) {
-          if (err) throw err;
-          if (result.length === 0) {
-            // insert data into database with mysql
-            connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
-              if (err) throw err;
-              console.log('Versionseintrag erstellt');
-            });
-          } else if (_.isEqual(result[0].Result, JSON.stringify(data.versions))) {
-            console.log('Versionseintrag vorhanden')
-          } else {
-            connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
-              if (err) throw err;
-              console.log('Versionseintrag geschrieben');
-            });
-          }
-        });
-      } else {
-        console.log('Keine Versionen vorhanden')
-      }
+      // insert results into database only if the last insert by id is different from the current insert
+      connection.query('SELECT * FROM Resultate WHERE Projekt_ID = ' + id + ' ORDER BY Result_ID DESC LIMIT 1', function (err, result) {
+        if (err) throw err;
+
+        if (result.length === 0) {
+          // insert data into database with mysql
+          connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
+            if (err) throw err;
+            console.log('Versionseintrag erstellt');
+          });
+        } else if (!_.isEqual(result[0].Result, JSON.stringify(data.versions))) {
+          console.log('Versionseintrag vorhanden')
+        } else {
+          connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
+            if (err) throw err;
+            console.log('Versionseintrag geschrieben');
+          });
+        }
+      });
     }
   });
 }
@@ -148,7 +145,7 @@ function getLibarys(url) {
         //console.log(JSON.stringify(results, null, 2))
 
         // write results to database
-        safeTechnicalVersionsToDatabase(results,url);
+        safeTechnicalVersionsToDatabase(results, url);
 
       } catch (error) {
         console.error(error)
@@ -166,8 +163,6 @@ function getWEData() {
       .then(response => {
         const json = response.data
 
-        console.log('data: ' + json)
-
         // get status code
         const statusCode = response.status
 
@@ -179,7 +174,7 @@ function getWEData() {
         data.versions = json
 
         // safe to database
-        if (statusCode === 200) {
+        if (statusCode === 200 && JSON.stringify(data.versions).length > 0 && data.versions.version != null) {
           safeBasicInformationsToDatabase(data);
         }
 
