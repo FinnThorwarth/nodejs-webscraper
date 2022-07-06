@@ -90,13 +90,23 @@ function getLibarys(url) {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(url);
-    const wappalyzer = new Wappalyzer(browser);
-    const libarys = await wappalyzer.analyze();
+
+    // get source code with puppeteer
+    const html = await page.content();
+    //console.log('html: ' + html);
+    // analyze website html with wappalyzer
+
+    const wappalyzer = new Wappalyzer()
+    await wappalyzer.init()
+
+    const site = await wappalyzer(html);
+    const apps = site.analyze();
+    console.log(apps);
     await browser.close();
-    return libarys;
+    return apps;
   }
-  )().then(libarys => {
-    console.log(libarys)
+  )().then(apps => {
+    console.log(apps)
   }
   ).catch(err => {
     console.log(err)
