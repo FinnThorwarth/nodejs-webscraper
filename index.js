@@ -114,7 +114,7 @@ function getLibarys(url) {
     delay: 500,
     headers: {},
     maxDepth: 3,
-    maxUrls: 10,
+    maxUrls: 5,
     maxWait: 5000,
     recursive: true,
     probe: true,
