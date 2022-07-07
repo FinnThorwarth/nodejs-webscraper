@@ -44,7 +44,7 @@ function safeBasicInformationsToDatabase(data) {
       // insert data into database with mysql
       connection.query('INSERT INTO Projekte (Name,URL,URLAPI) VALUES (' + mysql.escape(data.name) + ',' + mysql.escape(data.url) + ',' + mysql.escape(data.urlAPI) + ')', function (err, result) {
         if (err) throw err;
-        console.log('Eintrag erstellt');
+        console.log(data.url +' Eintrag erstellt');
       });
     } else {
       // console.log('Eintrag vorhanden')
@@ -54,7 +54,7 @@ function safeBasicInformationsToDatabase(data) {
       //update data where id is equal to id
       connection.query('UPDATE Projekte SET Name = ' + mysql.escape(data.name) + ', URL = ' + mysql.escape(data.url) + ', URLAPI = ' + mysql.escape(data.urlAPI) + ' WHERE ID = ' + mysql.escape(id), function (err, result) {
         if (err) throw err;
-        console.log('Haupteintrag aktualisiert');
+        console.log(data.url +' Haupteintrag aktualisiert');
       });
 
       // insert results into database only if the last insert by id is different from the current insert
@@ -65,14 +65,14 @@ function safeBasicInformationsToDatabase(data) {
           // insert data into database with mysql
           connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
             if (err) throw err;
-            console.log('Versionseintrag erstellt');
+            console.log(data.url +' Versionseintrag erstellt');
           });
         } else if (!_.isEqual(result[0].Result, JSON.stringify(data.versions))) {
-          console.log('Versionseintrag vorhanden')
+          console.log(data.url +' Versionseintrag vorhanden')
         } else {
           connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (' + id + ',' + mysql.escape(JSON.stringify(data.versions)) + ',' + mysql.escape(data.versions.version) + ',' + mysql.escape(data.versions.phpVersion) + ',' + mysql.escape(data.versions.sqlVersion) + ')', function (err, result) {
             if (err) throw err;
-            console.log('Versionseintrag geschrieben');
+            console.log(data.url +' Versionseintrag geschrieben');
           });
         }
       });
@@ -98,7 +98,7 @@ function safeTechnicalVersionsToDatabase(data, url) {
           // update data in database where id is equal id
           connection.query('UPDATE Resultate SET Technologies = ' + mysql.escape(JSON.stringify(data.technologies[0])) + ', URLS = ' + mysql.escape(JSON.stringify(data.urls)) + ' WHERE Result_ID = ' + id, function (err, result) {
             if (err) throw err;
-            console.log('Technologieeintrag aktualisiert');
+            console.log(url +' Technologieeintrag aktualisiert');
           });
         }
       });
@@ -184,30 +184,6 @@ function getWEData() {
     getLibarys(urlData.url);
   })
 }
-
-
-function getWEIncludes() {
-  urls.forEach(urlData => {
-    axios(urlData.urlAPI)
-      .then(response => {
-        const html = response.data
-        const $ = cheerio.load(html)
-        const data = {}
-        $('h1', html).each(function () { //<-- cannot be a function expression
-          data.title = $(this).text()
-          data.name = urlData.name
-          data.url = urlData.url
-          data.urlAPI = urlData.urlAPI
-        })
-        console.log(data)
-        console.log(urlData.name)
-        // safe to database
-        safeBasicInformationsToDatabase(data);
-
-      }).catch(err => console.log(err))
-  })
-}
-
 
 // run function every 24 hours
 setInterval(() => {
