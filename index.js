@@ -96,7 +96,7 @@ function safeTechnicalVersionsToDatabase(data, url) {
           var id = result[0].Result_ID;
 
           // update data in database where id is equal id
-          connection.query('UPDATE Resultate SET Technologies = ' + mysql.escape(JSON.stringify(data.technologies[0])) + ', URLS = ' + mysql.escape(JSON.stringify(data.urls)) + ' WHERE Result_ID = ' + id, function (err, result) {
+          connection.query('UPDATE Resultate SET Technologies = ' + mysql.escape(JSON.stringify(data.technologies)) + ', URLS = ' + mysql.escape(JSON.stringify(data.urls)) + ' WHERE Result_ID = ' + id, function (err, result) {
             if (err) throw err;
             console.log(url +' Technologieeintrag aktualisiert');
           });

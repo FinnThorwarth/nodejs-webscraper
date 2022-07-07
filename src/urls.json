@@ -138,5 +138,12 @@
     "name": "Familienzentrum Osterholz-Scharmbeck e.V.",
     "url": "https://www.mgh-ohz.de",
     "urlAPI": "https://www.mgh-ohz.de/_extras/api/versions.php"
+  },
+  {
+    "name": "Familienzentrum Osterholz-Scharmbeck e.V.",
+    "url": "https://www.ppr-planung.de",
+    "urlAPI": "https://www.ppr-planung.de/_extras_/api/versions.php"
   }
 ]
+
+
