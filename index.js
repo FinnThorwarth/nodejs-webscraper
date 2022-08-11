@@ -10,6 +10,7 @@ const puppeteer = require('puppeteer'); // Lib for simulating a browser
 const app = express()
 app.use(cors())
 
+// Lib for gql: https://www.npmjs.com/package/graphql-request#install
 
 //import urls from './urls.json'
 const urls = require('./src/urls.json')
