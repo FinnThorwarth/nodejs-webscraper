@@ -1,149 +1,188 @@
 [
   {
+    "client": "WG Werbeagentur",
     "name": "WG Werbeagentur",
     "url": "https://www.wg-werbeagentur.de/",
     "urlAPI": "https://www.wg-werbeagentur.de/_extras/api/versions.php"
   },
   {
+    "client": "Blaumeier e.V.",
     "name": "Blaumeier",
     "url": "https://www.blaumeier.de/",
     "urlAPI": "https://www.blaumeier.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": ":prime",
     "url": "https://www.primebremen.de/",
     "urlAPI": "https://www.primebremen.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "here ahead",
     "url": "https://www.aheadbremen.de",
     "urlAPI": "https://www.aheadbremen.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Marinetech",
     "url": "https://www.marinetech.de",
     "urlAPI": "https://www.marinetech.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Werner Holding",
     "url": "https://www.werner-holding.de",
     "urlAPI": "https://www.werner-holding.de/_extras_/api/versions.php"
   },
   {
+    "client": "",
     "name": "Ahlrich Siemens",
     "url": "https://www.ahlrich-siemens.com",
     "urlAPI": "https://www.ahlrich-siemens.com/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Borrmann Coaching",
     "url": "https://www.borrmann-coaching.de",
     "urlAPI": "https://www.borrmann-coaching.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Franzen Legal",
     "url": "https://www.franzen-legal.de",
     "urlAPI": "https://www.franzen-legal.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Gartenräume Gestalten",
     "url": "http://www.gartenraeume-gestalten.de",
     "urlAPI": "http:/www.gartenraeume-gestalten.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Immobilien Fleischhauer",
     "url": "https://www.immobilien-fleischhauer.de",
     "urlAPI": "https://www.immobilien-fleischhauer.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Jens Stemminger",
     "url": "https://www.js-bits.com",
     "urlAPI": "https://www.js-bits.com/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "InnoWi",
     "url": "https://www.innowi.de",
     "urlAPI": "https://www.innowi.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Babette",
     "url": "https://www.babette-komik.de",
     "urlAPI": "https://www.babette-komik.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "nesemann & grambeck",
     "url": "https://newsletter.umsatz-steuer-beratung.de",
     "urlAPI": "https://newsletter.umsatz-steuer-beratung.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Nicole Erichsen",
     "url": "https://www.nicoleerichsen.de",
     "urlAPI": "https://www.nicoleerichsen.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Arbeitgeberverband AWO",
     "url": "https://www.agv-awo.de",
     "urlAPI": "https://www.agv-awo.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Barbara Heindlmeier",
     "url": "https://www.barbaraheindlmeier.de",
     "urlAPI": "https://www.barbaraheindlmeier.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Schaulust",
     "url": "https://www.bremen-schaulust.de",
     "urlAPI": "https://www.bremen-schaulust.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "DATALOG",
     "url": "https://www.datalog-bremen.de",
     "urlAPI": "https://www.datalog-bremen.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Matthias Westerholt",
     "url": "https://www.die-rechtsanwaelte.com",
     "urlAPI": "https://www.die-rechtsanwaelte.com/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Ensemble La Ninfea",
     "url": "https://www.ensemble-laninfea.de",
     "urlAPI": "https://www.ensemble-laninfea.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Fachärzte für Frauenheilkunde und Geburtshilfe",
     "url": "https://www.frauenaerzte-bremen.de",
     "urlAPI": "https://www.frauenaerzte-bremen.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Hof Kaemena",
     "url": "https://www.hof-kaemena.de",
     "urlAPI": "https://www.hof-kaemena.de/_extras_/api/versions.php"
   },
   {
+    "client": "",
     "name": "Knäcke",
     "url": "https://www.knaecke.com",
     "urlAPI": "https://www.knaecke.com/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Komponisten-Quartier",
     "url": "https://www.komponistenquartier.de",
     "urlAPI": "https://www.komponistenquartier.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Landesfrauenrat Bremen",
     "url": "https://www.landesfrauenrat-bremen.de",
     "urlAPI": "https://www.landesfrauenrat-bremen.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "Familienzentrum Osterholz-Scharmbeck e.V.",
     "url": "https://www.mgh-ohz.de",
     "urlAPI": "https://www.mgh-ohz.de/_extras/api/versions.php"
   },
   {
+    "client": "",
     "name": "ppr Freiraum+Umwelt",
     "url": "https://www.ppr-planung.de",
     "urlAPI": "https://www.ppr-planung.de/_extras_/api/versions.php"
+  },
+  {
+    "client": "Zeisner Feinkost GmbH & Co. KG",
+    "name": "Zeisner",
+    "url": "https://www.worcester-sauce.de",
+    "urlAPI": "https://www.worcester-sauce.de/_extras/api/versions.php"
+  },
+  {
+    "client": "Zeisner Feinkost GmbH & Co. KG",
+    "name": "Zeisner",
+    "url": "https://www.zeisner.de",
+    "urlAPI": "https://www.zeisner.de/_extras/api/versions.php"
   }
 ]
-
-
