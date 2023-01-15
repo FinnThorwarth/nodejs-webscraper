@@ -38,8 +38,8 @@
   {
     "client": "",
     "name": "Ahlrich Siemens",
-    "url": "https://www.ahlrich-siemens.com",
-    "urlAPI": "https://www.ahlrich-siemens.com/_extras/api/versions.php"
+    "url": "https://www.ahlrich-siemens.de",
+    "urlAPI": "https://www.ahlrich-siemens.de/_extras/api/versions.php"
   },
   {
     "client": "",
@@ -184,5 +184,12 @@
     "name": "Zeisner",
     "url": "https://www.zeisner.de",
     "urlAPI": "https://www.zeisner.de/_extras/api/versions.php"
-  }
+  },
+  {
+    "client": "Jana Ahrens",
+    "name": "Apfelfuchs",
+    "url": "https://www.apfelfuchs-bremen.de",
+    "urlAPI": "https://www.apfelfuchs-bremen.de/_extras/api/versions.php"
+  },
+
 ]
