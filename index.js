@@ -46,7 +46,6 @@ function safeBasicInformationsToDatabase(data) {
           throw err;
         });
       }
-
       var projectId = result.insertId;
       connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE Result=VALUES(Result), WE=VALUES(WE), PHP=VALUES(PHP), SQLVersion=VALUES(SQLVersion)', [projectId, JSON.stringify(data.versions), data.versions.version, data.versions.phpVersion, data.versions.sqlVersion], function (err, result) {
         if (err) {
