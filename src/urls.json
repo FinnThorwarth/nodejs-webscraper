@@ -55,12 +55,6 @@
   },
   {
     "client": "",
-    "name": "Gartenräume Gestalten",
-    "url": "http://www.gartenraeume-gestalten.de",
-    "urlAPI": "http:/www.gartenraeume-gestalten.de/_extras/api/versions.php"
-  },
-  {
-    "client": "",
     "name": "Immobilien Fleischhauer",
     "url": "https://www.immobilien-fleischhauer.de",
     "urlAPI": "https://www.immobilien-fleischhauer.de/_extras/api/versions.php"
@@ -190,6 +184,6 @@
     "name": "Apfelfuchs",
     "url": "https://www.apfelfuchs-bremen.de",
     "urlAPI": "https://www.apfelfuchs-bremen.de/_extras/api/versions.php"
-  },
+  }
 
 ]

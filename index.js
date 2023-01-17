@@ -29,7 +29,7 @@ app.get('/results', (req, res) => {
 })
 
 // Database Connection
-var connection = mysql.createPool({
+var pool = mysql.createPool({
   host: config.database.host,
   user: config.database.user,
   password: config.database.password,
@@ -37,51 +37,106 @@ var connection = mysql.createPool({
 });
 
 // safe to database
+
 function safeBasicInformationsToDatabase(data) {
-  connection.beginTransaction(function (err) {
-    if (err) { throw err; }
-    connection.query('INSERT INTO Projekte (Name,URL,URLAPI) VALUES (?,?,?) ON DUPLICATE KEY UPDATE Name=VALUES(Name), URLAPI=VALUES(URLAPI)', [data.name, data.url, data.urlAPI], function (err, result) {
-      if (err) {
-        return connection.rollback(function () {
-          throw err;
-        });
-      }
-      var projectId = result.insertId;
-      connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE Result=VALUES(Result), WE=VALUES(WE), PHP=VALUES(PHP), SQLVersion=VALUES(SQLVersion)', [projectId, JSON.stringify(data.versions), data.versions.version, data.versions.phpVersion, data.versions.sqlVersion], function (err, result) {
-        if (err) {
-          return connection.rollback(function () {
-            throw err;
-          });
-        }
-        connection.commit(function (err) {
+  pool.getConnection(function (err, connection) {
+    if (err) throw err;
+    // Check if the URL is already in the database
+    connection.query(`SELECT ID FROM Projekte WHERE URL = ${mysql.escape(data.url)}`, function (err, result) {
+      if (err) throw err;
+      if (result.length === 0) {
+        // URL is not in the database, insert the data
+        connection.beginTransaction(function (err) {
           if (err) {
             return connection.rollback(function () {
               throw err;
             });
           }
-          console.log(data.url + ' Eintrag erstellt oder aktualisiert');
+          connection.query('INSERT INTO Projekte (Name,URL,URLAPI) VALUES (?,?,?)', [data.name, data.url, data.urlAPI], function (err, result) {
+            if (err) {
+              return connection.rollback(function () {
+                throw err;
+              });
+            }
+            var projectId = result.insertId;
+            connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (?,?,?,?,?)', [projectId, JSON.stringify(data.versions), data.versions.version, data.versions.phpVersion, data.versions.sqlVersion], function (err, result) {
+              if (err) {
+                return connection.rollback(function () {
+                  throw err;
+                });
+              }
+              connection.commit(function (err) {
+                if (err) {
+                  return connection.rollback(function () {
+                    throw err;
+                  });
+                }
+                console.log(data.url + ' Eintrag erstellt');
+                connection.release();
+              });
+            });
+          });
         });
-      });
+      } else {
+        // URL is already in the database, update the data
+        connection.beginTransaction(function (err) {
+          if (err) {
+            return connection.rollback(function () {
+              throw err;
+            });
+          }
+          var projectId = result[0].ID;
+          connection.query('UPDATE Projekte SET Name=?, URLAPI=? WHERE ID = ?', [data.name, data.urlAPI, projectId], function (err, result) {
+            if (err) {
+              return connection.rollback(function () {
+                throw err;
+              });
+            }
+            connection.query('UPDATE Resultate SET Result=?, WE=?, PHP=?, SQLVersion=? WHERE Projekt_ID = ?', [JSON.stringify(data.versions), data.versions.version, data.versions.phpVersion, data.versions.sqlVersion, projectId], function (err, result) {
+              if (err) {
+                return connection.rollback(function () {
+                  throw err;
+                });
+              }
+              connection.commit(function (err) {
+                if (err) {
+                  return connection.rollback(function () {
+                    throw err;
+                  });
+                }
+                console.log(data.url + ' Eintrag aktualisiert');
+                connection.release();
+              });
+            });
+          });
+        });
+      }
     });
   });
 }
+               
 
 function safeTechnicalVersionsToDatabase(data, url) {
   // check if data is already in database
-  connection.query(`SELECT ID, (SELECT Result_ID FROM Resultate WHERE Projekt_ID = Projekte.ID ORDER BY Result_ID DESC LIMIT 1) AS Result_ID FROM Projekte WHERE URL = ${mysql.escape(url)}`, function (err, result) {
+  pool.getConnection(function (err, connection) {
     if (err) throw err;
-    if (result.length > 0) {
-      var id = result[0].ID;
-      var resultId = result[0].Result_ID;
-      if (resultId) {
-        // update data in database where id is equal id
-        connection.query(`UPDATE Resultate SET Technologies = ${mysql.escape(JSON.stringify(data.technologies))}, URLS = ${mysql.escape(JSON.stringify(data.urls))} WHERE Result_ID = ${resultId}`, function (err, result) {
-          if (err) throw err;
-          console.log(url + ' Technologieeintrag aktualisiert');
-        });
+    connection.query(`SELECT ID, (SELECT Result_ID FROM Resultate WHERE Projekt_ID = Projekte.ID ORDER BY Result_ID DESC LIMIT 1) AS Result_ID FROM Projekte WHERE URL = ${mysql.escape(url)}`, function (err, result) {
+      if (err) throw err;
+      if (result.length > 0) {
+        var id = result[0].ID;
+        var resultId = result[0].Result_ID;
+        if (resultId) {
+          // update data in database where id is equal id
+          connection.query(`UPDATE Resultate SET Technologies = ${mysql.escape(JSON.stringify(data.technologies))}, URLS = ${mysql.escape(JSON.stringify(data.urls))} WHERE Result_ID = ${resultId}`, function (err,
+            result) {
+            if (err) throw err;
+            console.log(url + ' Technologieeintrag aktualisiert');
+          });
+        }
       }
-    }
-  });
+    });
+  }
+  )
 }
 
 function getLibarys(url) {
@@ -93,7 +148,7 @@ function getLibarys(url) {
     headers: {},
     maxDepth: 3,
     maxUrls: 15,
-    maxWait: 10000,
+    maxWait: 5000,
     recursive: true,
     probe: true,
     proxy: false,
@@ -104,9 +159,8 @@ function getLibarys(url) {
     noRedirect: false,
   };
 
-  const wappalyzer = new Wappalyzer(options)
-
-    ; (async function () {
+  const wappalyzer = new Wappalyzer(options); 
+  (async function () {
       try {
         await wappalyzer.init()
 
