@@ -66,7 +66,7 @@ function safeBasicInformationsToDatabase(data) {
   pool.getConnection(function (err, connection) {
     if (err) throw err;
     // Check if the URL is already in the database
-    connection.query(`SELECT ID FROM Projekte WHERE URL = ${mysql.escape(data.url)}`, function (err, result) {
+    connection.query(`SELECT ID FROM Projekte WHERE URL = ${mysql.escape(data.URL)}`, function (err, result) {
       if (err) throw err;
       if (result.length === 0) {
         // URL is not in the database, insert the data
@@ -76,7 +76,7 @@ function safeBasicInformationsToDatabase(data) {
               throw err;
             });
           }
-          connection.query('INSERT INTO Projekte (Name,URL,URLAPI) VALUES (?,?,?)', [data.name, data.url, data.urlAPI], function (err, result) {
+          connection.query('INSERT INTO Projekte (Name,URL,URLAPI) VALUES (?,?,?)', [data.Name, data.URL, data.URLAPI], function (err, result) {
             if (err) {
               return connection.rollback(function () {
                 throw err;
@@ -95,7 +95,7 @@ function safeBasicInformationsToDatabase(data) {
                     throw err;
                   });
                 }
-                console.log(data.url + ' Eintrag erstellt');
+                console.log(data.URL + ' Versionseintrag erstellt');
                 connection.release();
               });
             });
@@ -110,35 +110,52 @@ function safeBasicInformationsToDatabase(data) {
             });
           }
           var projectId = result[0].ID;
-          connection.query('UPDATE Projekte SET Name=?, URLAPI=? WHERE ID = ?', [data.name, data.urlAPI, projectId], function (err, result) {
-            if (err) {
-              return connection.rollback(function () {
-                throw err;
-              });
-            }
-            connection.query('UPDATE Resultate SET Result=?, WE=?, PHP=?, SQLVersion=? WHERE Projekt_ID = ?', [JSON.stringify(data.versions), data.versions.version, data.versions.phpVersion, data.versions.sqlVersion, projectId], function (err, result) {
-              if (err) {
-                return connection.rollback(function () {
-                  throw err;
-                });
-              }
-              connection.commit(function (err) {
+
+          // Check if Result is already in the database if not insert it
+          connection.query(`SELECT Result_ID FROM Resultate WHERE Projekt_ID = ${projectId} ORDER BY Result_ID DESC LIMIT 1`, function (err, result) {
+            if (err) throw err;
+            if (result.length === 0) {
+              connection.query('INSERT INTO Resultate (Projekt_ID,Result,WE,PHP,SQLVersion) VALUES (?,?,?,?,?)', [projectId, JSON.stringify(data.versions), data.versions.version, data.versions.phpVersion, data.versions.sqlVersion], function (err, result) {
                 if (err) {
                   return connection.rollback(function () {
                     throw err;
                   });
                 }
-                console.log(data.url + ' Eintrag aktualisiert');
-                connection.release();
+                connection.commit(function (err) {
+                  if (err) {
+                    return connection.rollback(function () {
+                      throw err;
+                    });
+                  }
+                  console.log(data.URL + ' Versionseintrag erstellt');
+                  connection.release();
+                });
               });
-            });
+            } else {
+
+              connection.query('UPDATE Resultate SET Result=?, WE=?, PHP=?, SQLVersion=? WHERE Projekt_ID = ?', [JSON.stringify(data.versions), data.versions.version, data.versions.phpVersion, data.versions.sqlVersion, projectId], function (err, result) {
+                if (err) {
+                  return connection.rollback(function () {
+                    throw err;
+                  });
+                }
+                connection.commit(function (err) {
+                  if (err) {
+                    return connection.rollback(function () {
+                      throw err;
+                    });
+                  }
+                  console.log(data.URL + ' Versionseintrag aktualisiert');
+                  connection.release();
+                });
+              })
+            }
           });
         });
-      }
+      };
     });
   });
 }
-
 
 function safeTechnicalVersionsToDatabase(data, url) {
   // check if data is already in database
@@ -151,7 +168,7 @@ function safeTechnicalVersionsToDatabase(data, url) {
         var resultId = result[0].Result_ID;
         if (resultId) {
           // update data in database where id is equal id
-          connection.query(`UPDATE Resultate SET Technologies = ${mysql.escape(JSON.stringify(data.technologies))}, URLS = ${mysql.escape(JSON.stringify(data.urls))} WHERE Result_ID = ${resultId}`, function (err,
+          connection.query(`UPDATE Resultate SET Technologies = ${mysql.escape(JSON.stringify(data.technologies))}, URLS = ${mysql.escape(JSON.stringify(data.URLs))} WHERE Result_ID = ${resultId}`, function (err,
             result) {
             if (err) throw err;
             console.log(url + ' Technologieeintrag aktualisiert');
@@ -213,36 +230,42 @@ function getLibarys(url) {
 
 // running function for every entry in urls
 // define function 
-function getWEData(urls) {
+async function getWEData(urls) {
 
-  const axiosPromises = urls.map(urlData => {
-    return axios(urlData.URLAPI)
-      .then(response => {
-        // Daten definieren
-        const data = {
-          name: urlData.Name,
-          url: urlData.URL,
-          urlAPI: urlData.URLAPI,
-          versions: response.data
-        }
+  const batchSize = 5;
 
-        // safe to database
-        if (response.status === 200 && JSON.stringify(data.versions).length > 0 && data.versions.version != null) {
-          safeBasicInformationsToDatabase(data);
-        }
+  // loop over urls and slice into batches
+  for (let i = 0; i < urls.length; i += batchSize) {
+    const batch = urls.slice(i, i + batchSize);
 
-        // getLibarys
-        getLibarys(urlData.URL);
-      });
-  });
+    // create promises for each url in batch
+    const axiosPromises = batch.map(urlData => {
+      return axios(urlData.URLAPI)
+        .then(response => {
+          // Daten definieren
+          const data = {
+            Name: urlData.Name,
+            URL: urlData.URL,
+            URLAPI: urlData.URLAPI,
+            versions: response.data
+          }
 
-  Promise.all(axiosPromises)
-    .then(() => {
-      console.log("All requests completed successfully");
-    })
-    .catch(err => console.log(err));
+          // safe to database
+          if (response.status === 200 && JSON.stringify(data.versions).length > 0 && data.versions.version != null) {
+            safeBasicInformationsToDatabase(data);
+          }
 
+          // getLibarys
+          getLibarys(urlData.URL);
+        });
+    });
+
+    // wait for all promises in batch to resolve
+    await Promise.all(axiosPromises);
+  }
+  console.log("All requests completed successfully");
 }
+
 
 // run function every 24 hours
 setInterval(() => {
@@ -251,7 +274,7 @@ setInterval(() => {
     getWEData(urls);
   });
 
-}, 1000 * 60 * 60 * 12) //ms * s * m * h
+}, 1000 * 60 * 60 * 12), //ms * s * m * h
 
 
-app.listen(PORT, () => console.log(`server running on PORT ${PORT}`))
+  app.listen(PORT, () => console.log(`server running on PORT ${PORT}`))
