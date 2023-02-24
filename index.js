@@ -1,3 +1,5 @@
+process.setMaxListeners(0)
+
 const PORT = 8080
 const axios = require('axios')
 const cheerio = require('cheerio')
@@ -13,7 +15,8 @@ app.use(cors())
 // Lib for gql: https://www.npmjs.com/package/graphql-request#install
 
 //import urls from './urls.json'
-const urls = require('./src/urls.json')
+//const urls = require('./src/urls.json')
+
 
 //import config from './src/config.json'
 const config = require('./src/config.json');
@@ -24,7 +27,9 @@ app.get('/', function (req, res) {
 })
 
 app.get('/results', (req, res) => {
-  getWEData()
+  getProjects(function (urls) {
+    getWEData(urls);
+  });
   res.json('WG Webscraper')
 })
 
@@ -35,6 +40,25 @@ var pool = mysql.createPool({
   password: config.database.password,
   database: config.database.database
 });
+
+
+// fetch data from database and return it
+
+function getProjects(callback) {
+  var urls = [];
+  pool.getConnection(function (err, connection) {
+    if (err) throw err;
+    connection.query('SELECT * FROM Projekte', function (err, result) {
+      if (err) throw err;
+      result.forEach(function (item) {
+        urls.push(item);
+        console.log(item);
+      });
+      callback(urls);
+    });
+  });
+}
+
 
 // safe to database
 
@@ -114,7 +138,7 @@ function safeBasicInformationsToDatabase(data) {
     });
   });
 }
-               
+
 
 function safeTechnicalVersionsToDatabase(data, url) {
   // check if data is already in database
@@ -159,46 +183,46 @@ function getLibarys(url) {
     noRedirect: false,
   };
 
-  const wappalyzer = new Wappalyzer(options); 
+  const wappalyzer = new Wappalyzer(options);
   (async function () {
-      try {
-        await wappalyzer.init()
+    try {
+      await wappalyzer.init()
 
-        // Optionally set additional request headers
-        const headers = {}
+      // Optionally set additional request headers
+      const headers = {}
 
-        const site = await wappalyzer.open(url, headers)
+      const site = await wappalyzer.open(url, headers)
 
-        // Optionally capture and output errors
-        site.on('error', console.error)
+      // Optionally capture and output errors
+      site.on('error', console.error)
 
-        const results = await site.analyze()
+      const results = await site.analyze()
 
-        //console.log(JSON.stringify(results, null, 2))
+      //console.log(JSON.stringify(results, null, 2))
 
-        // write results to database
-        safeTechnicalVersionsToDatabase(results, url);
+      // write results to database
+      safeTechnicalVersionsToDatabase(results, url);
 
-      } catch (error) {
-        console.error(error)
-      }
+    } catch (error) {
+      console.error(error)
+    }
 
-      await wappalyzer.destroy()
-    })()
+    await wappalyzer.destroy()
+  })()
 }
 
 // running function for every entry in urls
 // define function 
-function getWEData() {
+function getWEData(urls) {
 
   const axiosPromises = urls.map(urlData => {
-    return axios(urlData.urlAPI)
+    return axios(urlData.URLAPI)
       .then(response => {
         // Daten definieren
         const data = {
-          name: urlData.name,
-          url: urlData.url,
-          urlAPI: urlData.urlAPI,
+          name: urlData.Name,
+          url: urlData.URL,
+          urlAPI: urlData.URLAPI,
           versions: response.data
         }
 
@@ -208,7 +232,7 @@ function getWEData() {
         }
 
         // getLibarys
-        getLibarys(urlData.url);
+        getLibarys(urlData.URL);
       });
   });
 
@@ -222,7 +246,11 @@ function getWEData() {
 
 // run function every 24 hours
 setInterval(() => {
-  getWEData()
+
+  getProjects(function (urls) {
+    getWEData(urls);
+  });
+
 }, 1000 * 60 * 60 * 12) //ms * s * m * h
 
 

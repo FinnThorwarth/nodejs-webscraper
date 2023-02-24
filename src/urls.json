@@ -1,20 +1,26 @@
 [
   {
+    "client": "TxB Netzwerk",
+    "name": "TxB Netzwerk",
+    "url": "https://www.txb-netzwerk.de",
+    "urlAPI": "https://www.txb-netzwerk.de/_extras_/api/versions.php"
+  },
+  {
     "client": "WG Werbeagentur",
     "name": "WG Werbeagentur",
-    "url": "https://www.wg-werbeagentur.de/",
+    "url": "https://www.wg-werbeagentur.de",
     "urlAPI": "https://www.wg-werbeagentur.de/_extras/api/versions.php"
   },
   {
     "client": "Blaumeier e.V.",
     "name": "Blaumeier",
-    "url": "https://www.blaumeier.de/",
+    "url": "https://www.blaumeier.de",
     "urlAPI": "https://www.blaumeier.de/_extras/api/versions.php"
   },
   {
     "client": "",
     "name": ":prime",
-    "url": "https://www.primebremen.de/",
+    "url": "https://www.primebremen.de",
     "urlAPI": "https://www.primebremen.de/_extras/api/versions.php"
   },
   {
@@ -184,6 +190,23 @@
     "name": "Apfelfuchs",
     "url": "https://www.apfelfuchs-bremen.de",
     "urlAPI": "https://www.apfelfuchs-bremen.de/_extras/api/versions.php"
+  },
+  {
+    "client": "",
+    "name": "Palliativ Bremen",
+    "url": "https://www.palliativ-bremen.de",
+    "urlAPI": "https://www.palliativ-bremen.de/_extras/api/versions.php"
+  },
+  {
+    "client": "",
+    "name": "Ehlers GmbH",
+    "url": "https://www.ehlersgmbh.com",
+    "urlAPI": "https://www.ehlersgmbh.com/_extras/api/versions.php"
+  },
+  {
+    "client": "",
+    "name": "Segelwege",
+    "url": "https://www.segelwege.de",
+    "urlAPI": "https://www.segelwege.de/_extras_/api/versions.php"
   }
-
 ]
