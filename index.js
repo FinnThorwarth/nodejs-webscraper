@@ -48,7 +48,7 @@ function getProjects(callback) {
   var urls = [];
   pool.getConnection(function (err, connection) {
     if (err) throw err;
-    connection.query('SELECT * FROM Projekte', function (err, result) {
+    connection.query('SELECT p.* FROM Projekte p LEFT JOIN Resultate r ON p.ID = r.Projekt_ID ORDER BY r.Date ASC', function (err, result) {
       if (err) throw err;
       result.forEach(function (item) {
         urls.push(item);
@@ -58,6 +58,7 @@ function getProjects(callback) {
     });
   });
 }
+
 
 
 // safe to database
